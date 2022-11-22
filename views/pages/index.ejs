@@ -7,26 +7,33 @@
 <body>
   <h1>Just Local Pets</h1>
   <script>
-const send = async function(buttonId) {
-  const response = await fetch("/log", {
-    method: "POST",
+let token = {
+  "access_token": "<%= access_token %>",
+  "exires_at": <%= expires_at %>
+};
+
+const getHeader = function(aToken) {
+  return {
+    method: "GET",
     headers: {
       "Accept": "application/json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      id: buttonId
-    })
-  });
-  const result = await response.json();
-  if (result.error) {
-    output.innerHTML = `<strong>ERROR: ${result.error.routine}</strong>`;
-  }
-  else {
-console.log(result);
-    output.innerHTML = `Created button ${result.newId.new_id} at ${result.when.localtime}. Refresh to view them all!`;
-  }
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${aToken.access_token}`
+    }
+  };
 };
+
+const getAnimals = async function() {
+  const header = getHeader(token);
+  const response = await fetch(
+    "https://api.petfinder.com/v2/animals?sort=random&limit=5",
+    header
+  );
+  const data = await response.json();
+  console.log(data);
+}
+
+getAnimals();
   </script>
 </body>
 </html>

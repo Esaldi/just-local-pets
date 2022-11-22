@@ -18,7 +18,26 @@ express()
   .set("views", path.join(__dirname, "views"))
   .set("view engine", "ejs")
   .get("/", async(req, res) => {
-    res.render("pages/index", {});
+    const response = await fetch(
+      "https://api.petfinder.com/v2/oauth2/token", {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          "grant_type": "client_credentials",
+          "client_id": process.env.CLIENT_ID,
+          "client_secret": process.env.CLIENT_SECRET
+        })
+      });
+    const data = await response.json();
+    const args = {
+      "access_token": data.access_token,
+      "expires_at": Date.now() + data.expires_in * 1000
+    };
+
+    res.render("pages/index", args);
    })
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
