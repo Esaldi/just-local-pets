@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Just Local Pets</title>
+  <meta charset="utf-8">
+</head>
+<body>
+  <h1>Just Local Pets</h1>
+  <script>
+const send = async function(buttonId) {
+  const response = await fetch("/log", {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      id: buttonId
+    })
+  });
+  const result = await response.json();
+  if (result.error) {
+    output.innerHTML = `<strong>ERROR: ${result.error.routine}</strong>`;
+  }
+  else {
+console.log(result);
+    output.innerHTML = `Created button ${result.newId.new_id} at ${result.when.localtime}. Refresh to view them all!`;
+  }
+};
+  </script>
+</body>
+</html>
+
