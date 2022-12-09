@@ -1,4 +1,2 @@
 # just-local-pets
-A sample repository using the Petfinder API
-
-It's amazing.
+A sample repository using the Petfinder API.
